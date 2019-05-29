@@ -8,19 +8,19 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema eCommerce
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema eCommerce
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
-USE `mydb` ;
+CREATE SCHEMA IF NOT EXISTS `eCommerce` DEFAULT CHARACTER SET utf8 ;
+USE `eCommerce` ;
 
 -- -----------------------------------------------------
--- Table `mydb`.`User`
+-- Table `eCommerce`.`User`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`User` (
+CREATE TABLE IF NOT EXISTS `eCommerce`.`User` (
   `Username` VARCHAR(12) NOT NULL,
   `Password` VARCHAR(16) NOT NULL,
   `Name` VARCHAR(45) NOT NULL,
@@ -37,9 +37,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Item`
+-- Table `eCommerce`.`Item`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Item` (
+CREATE TABLE IF NOT EXISTS `eCommerce`.`Item` (
   `ID` INT NOT NULL,
   `Seller_ID` VARCHAR(12) NOT NULL,
   `Name` VARCHAR(45) NOT NULL,
@@ -55,25 +55,25 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Item` (
   INDEX `fk_Item_User1_idx` (`Seller_ID` ASC),
   CONSTRAINT `fk_Item_User1`
     FOREIGN KEY (`Seller_ID`)
-    REFERENCES `mydb`.`User` (`Username`)
+    REFERENCES `eCommerce`.`User` (`Username`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Category`
+-- Table `eCommerce`.`Category`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Category` (
+CREATE TABLE IF NOT EXISTS `eCommerce`.`Category` (
   `Name` VARCHAR(256) NOT NULL,
   PRIMARY KEY (`Name`))
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Item_has_Category`
+-- Table `eCommerce`.`Item_has_Category`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Item_has_Category` (
+CREATE TABLE IF NOT EXISTS `eCommerce`.`Item_has_Category` (
   `Item_ID` INT NOT NULL,
   `Category_Name` VARCHAR(256) NOT NULL,
   PRIMARY KEY (`Item_ID`, `Category_Name`),
@@ -81,21 +81,21 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Item_has_Category` (
   INDEX `fk_Item_has_Category_Item_idx` (`Item_ID` ASC),
   CONSTRAINT `fk_Item_has_Category_Item`
     FOREIGN KEY (`Item_ID`)
-    REFERENCES `mydb`.`Item` (`ID`)
+    REFERENCES `eCommerce`.`Item` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Item_has_Category_Category1`
     FOREIGN KEY (`Category_Name`)
-    REFERENCES `mydb`.`Category` (`Name`)
+    REFERENCES `eCommerce`.`Category` (`Name`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Images`
+-- Table `eCommerce`.`Images`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Images` (
+CREATE TABLE IF NOT EXISTS `eCommerce`.`Images` (
   `Item_ID` INT NOT NULL,
   `ID` INT NOT NULL,
   `Image` BLOB NULL,
@@ -103,16 +103,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Images` (
   INDEX `fk_Images_Item1_idx` (`Item_ID` ASC),
   CONSTRAINT `fk_Images_Item1`
     FOREIGN KEY (`Item_ID`)
-    REFERENCES `mydb`.`Item` (`ID`)
+    REFERENCES `eCommerce`.`Item` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Bids`
+-- Table `eCommerce`.`Bids`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Bids` (
+CREATE TABLE IF NOT EXISTS `eCommerce`.`Bids` (
   `Item_ID` INT NOT NULL,
   `Bidder_ID` VARCHAR(12) NOT NULL,
   `DateTime` DATETIME NOT NULL,
@@ -122,21 +122,21 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Bids` (
   INDEX `fk_Bids_User1_idx` (`Bidder_ID` ASC),
   CONSTRAINT `fk_Bids_Item1`
     FOREIGN KEY (`Item_ID`)
-    REFERENCES `mydb`.`Item` (`ID`)
+    REFERENCES `eCommerce`.`Item` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Bids_User1`
     FOREIGN KEY (`Bidder_ID`)
-    REFERENCES `mydb`.`User` (`Username`)
+    REFERENCES `eCommerce`.`User` (`Username`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Messages`
+-- Table `eCommerce`.`Messages`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Messages` (
+CREATE TABLE IF NOT EXISTS `eCommerce`.`Messages` (
   `From_UserID` VARCHAR(12) NOT NULL,
   `To_UserID` VARCHAR(12) NOT NULL,
   `ID` INT NOT NULL,
@@ -148,12 +148,12 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Messages` (
   INDEX `fk_User_has_User_User1_idx` (`From_UserID` ASC),
   CONSTRAINT `fk_User_has_User_User1`
     FOREIGN KEY (`From_UserID`)
-    REFERENCES `mydb`.`User` (`Username`)
+    REFERENCES `eCommerce`.`User` (`Username`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_User_has_User_User2`
     FOREIGN KEY (`To_UserID`)
-    REFERENCES `mydb`.`User` (`Username`)
+    REFERENCES `eCommerce`.`User` (`Username`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
