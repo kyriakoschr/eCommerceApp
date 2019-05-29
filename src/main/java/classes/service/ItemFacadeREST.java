@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.backend.classes.service;
+package classes.service;
 
-import com.mycompany.backend.classes.Category;
+import classes.Item;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -25,54 +25,54 @@ import javax.ws.rs.core.MediaType;
  * @author kc
  */
 @Stateless
-@Path("com.mycompany.backend.classes.category")
-public class CategoryFacadeREST extends AbstractFacade<Category> {
+@Path("classes.item")
+public class ItemFacadeREST extends AbstractFacade<Item> {
 
     @PersistenceContext(unitName = "com.mycompany_backEnd_war_1.0-SNAPSHOTPU")
     private EntityManager em;
 
-    public CategoryFacadeREST() {
-        super(Category.class);
+    public ItemFacadeREST() {
+        super(Item.class);
     }
 
     @POST
     @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void create(Category entity) {
+    public void create(Item entity) {
         super.create(entity);
     }
 
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void edit(@PathParam("id") String id, Category entity) {
+    public void edit(@PathParam("id") Integer id, Item entity) {
         super.edit(entity);
     }
 
     @DELETE
     @Path("{id}")
-    public void remove(@PathParam("id") String id) {
+    public void remove(@PathParam("id") Integer id) {
         super.remove(super.find(id));
     }
 
     @GET
     @Path("{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Category find(@PathParam("id") String id) {
+    public Item find(@PathParam("id") Integer id) {
         return super.find(id);
     }
 
     @GET
     @Override
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Category> findAll() {
+    public List<Item> findAll() {
         return super.findAll();
     }
 
     @GET
     @Path("{from}/{to}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Category> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
+    public List<Item> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
     }
 

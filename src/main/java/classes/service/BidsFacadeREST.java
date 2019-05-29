@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.backend.classes.service;
+package classes.service;
 
-import com.mycompany.backend.classes.Item;
-import com.mycompany.backend.classes.ItemPK;
+import classes.Bids;
+import classes.BidsPK;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -27,77 +27,81 @@ import javax.ws.rs.core.PathSegment;
  * @author kc
  */
 @Stateless
-@Path("com.mycompany.backend.classes.item")
-public class ItemFacadeREST extends AbstractFacade<Item> {
+@Path("classes.bids")
+public class BidsFacadeREST extends AbstractFacade<Bids> {
 
     @PersistenceContext(unitName = "com.mycompany_backEnd_war_1.0-SNAPSHOTPU")
     private EntityManager em;
 
-    private ItemPK getPrimaryKey(PathSegment pathSegment) {
+    private BidsPK getPrimaryKey(PathSegment pathSegment) {
         /*
          * pathSemgent represents a URI path segment and any associated matrix parameters.
-         * URI path part is supposed to be in form of 'somePath;id=idValue;sellerID=sellerIDValue'.
+         * URI path part is supposed to be in form of 'somePath;itemID=itemIDValue;bidderID=bidderIDValue;dateTime=dateTimeValue'.
          * Here 'somePath' is a result of getPath() method invocation and
          * it is ignored in the following code.
          * Matrix parameters are used as field names to build a primary key instance.
          */
-        com.mycompany.backend.classes.ItemPK key = new com.mycompany.backend.classes.ItemPK();
+        classes.BidsPK key = new classes.BidsPK();
         javax.ws.rs.core.MultivaluedMap<String, String> map = pathSegment.getMatrixParameters();
-        java.util.List<String> id = map.get("id");
-        if (id != null && !id.isEmpty()) {
-            key.setId(new java.lang.Integer(id.get(0)));
+        java.util.List<String> itemID = map.get("itemID");
+        if (itemID != null && !itemID.isEmpty()) {
+            key.setItemID(new java.lang.Integer(itemID.get(0)));
         }
-        java.util.List<String> sellerID = map.get("sellerID");
-        if (sellerID != null && !sellerID.isEmpty()) {
-            key.setSellerID(sellerID.get(0));
+        java.util.List<String> bidderID = map.get("bidderID");
+        if (bidderID != null && !bidderID.isEmpty()) {
+            key.setBidderID(bidderID.get(0));
+        }
+        java.util.List<String> dateTime = map.get("dateTime");
+        if (dateTime != null && !dateTime.isEmpty()) {
+            key.setDateTime(new java.util.Date(dateTime.get(0)));
         }
         return key;
     }
 
-    public ItemFacadeREST() {
-        super(Item.class);
+    public BidsFacadeREST() {
+        super(Bids.class);
     }
 
     @POST
     @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void create(Item entity) {
+    public void create(Bids entity) {
         super.create(entity);
     }
 
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void edit(@PathParam("id") PathSegment id, Item entity) {
+    public void edit(@PathParam("id") PathSegment id, Bids entity) {
         super.edit(entity);
     }
 
     @DELETE
     @Path("{id}")
     public void remove(@PathParam("id") PathSegment id) {
-        com.mycompany.backend.classes.ItemPK key = getPrimaryKey(id);
+        classes.BidsPK key = getPrimaryKey(id);
         super.remove(super.find(key));
     }
 
     @GET
     @Path("{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Item find(@PathParam("id") PathSegment id) {
-        com.mycompany.backend.classes.ItemPK key = getPrimaryKey(id);
+    public Bids find(@PathParam("id") PathSegment id) {
+        classes.BidsPK key = getPrimaryKey(id);
         return super.find(key);
     }
 
     @GET
     @Override
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Item> findAll() {
+    public List<Bids> findAll() {
         return super.findAll();
     }
 
     @GET
     @Path("{from}/{to}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Item> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
+    public List<Bids> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
     }
 

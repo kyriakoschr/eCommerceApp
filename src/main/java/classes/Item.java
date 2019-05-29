@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.backend.classes;
+package classes;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -11,8 +11,8 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -36,8 +36,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Item.findAll", query = "SELECT i FROM Item i"),
-    @NamedQuery(name = "Item.findById", query = "SELECT i FROM Item i WHERE i.itemPK.id = :id"),
-    @NamedQuery(name = "Item.findBySellerID", query = "SELECT i FROM Item i WHERE i.itemPK.sellerID = :sellerID"),
+    @NamedQuery(name = "Item.findById", query = "SELECT i FROM Item i WHERE i.id = :id"),
     @NamedQuery(name = "Item.findByName", query = "SELECT i FROM Item i WHERE i.name = :name"),
     @NamedQuery(name = "Item.findByCurrentPrice", query = "SELECT i FROM Item i WHERE i.currentPrice = :currentPrice"),
     @NamedQuery(name = "Item.findByFirstBid", query = "SELECT i FROM Item i WHERE i.firstBid = :firstBid"),
@@ -50,8 +49,11 @@ import javax.xml.bind.annotation.XmlTransient;
 public class Item implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected ItemPK itemPK;
+    @Id
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "ID")
+    private Integer id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
@@ -81,10 +83,10 @@ public class Item implements Serializable {
     private String description;
     @ManyToMany(mappedBy = "itemCollection")
     private Collection<Category> categoryCollection;
-    @JoinColumn(name = "Seller_ID", referencedColumnName = "Username", insertable = false, updatable = false)
+    @JoinColumn(name = "Seller_ID", referencedColumnName = "Username")
     @ManyToOne(optional = false)
-    private User user;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "item")
+    private User sellerID;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "itemID")
     private Collection<Images> imagesCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "item")
     private Collection<Bids> bidsCollection;
@@ -92,25 +94,21 @@ public class Item implements Serializable {
     public Item() {
     }
 
-    public Item(ItemPK itemPK) {
-        this.itemPK = itemPK;
+    public Item(Integer id) {
+        this.id = id;
     }
 
-    public Item(ItemPK itemPK, String name) {
-        this.itemPK = itemPK;
+    public Item(Integer id, String name) {
+        this.id = id;
         this.name = name;
     }
 
-    public Item(int id, String sellerID) {
-        this.itemPK = new ItemPK(id, sellerID);
+    public Integer getId() {
+        return id;
     }
 
-    public ItemPK getItemPK() {
-        return itemPK;
-    }
-
-    public void setItemPK(ItemPK itemPK) {
-        this.itemPK = itemPK;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -194,12 +192,12 @@ public class Item implements Serializable {
         this.categoryCollection = categoryCollection;
     }
 
-    public User getUser() {
-        return user;
+    public User getSellerID() {
+        return sellerID;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setSellerID(User sellerID) {
+        this.sellerID = sellerID;
     }
 
     @XmlTransient
@@ -223,7 +221,7 @@ public class Item implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (itemPK != null ? itemPK.hashCode() : 0);
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
@@ -234,7 +232,7 @@ public class Item implements Serializable {
             return false;
         }
         Item other = (Item) object;
-        if ((this.itemPK == null && other.itemPK != null) || (this.itemPK != null && !this.itemPK.equals(other.itemPK))) {
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
@@ -242,7 +240,7 @@ public class Item implements Serializable {
 
     @Override
     public String toString() {
-        return "com.mycompany.backend.classes.Item[ itemPK=" + itemPK + " ]";
+        return "classes.Item[ id=" + id + " ]";
     }
     
 }

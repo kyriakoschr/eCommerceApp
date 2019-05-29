@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.backend.classes;
+package classes;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -100,7 +100,7 @@ public class BidsPK implements Serializable {
 
     @Override
     public String toString() {
-        return "com.mycompany.backend.classes.BidsPK[ itemID=" + itemID + ", bidderID=" + bidderID + ", dateTime=" + dateTime + " ]";
+        return "classes.BidsPK[ itemID=" + itemID + ", bidderID=" + bidderID + ", dateTime=" + dateTime + " ]";
     }
     
 }

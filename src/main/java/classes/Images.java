@@ -3,18 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.backend.classes;
+package classes;
 
 import java.io.Serializable;
+import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -26,37 +28,42 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Images.findAll", query = "SELECT i FROM Images i"),
-    @NamedQuery(name = "Images.findByItemID", query = "SELECT i FROM Images i WHERE i.imagesPK.itemID = :itemID"),
-    @NamedQuery(name = "Images.findById", query = "SELECT i FROM Images i WHERE i.imagesPK.id = :id")})
+    @NamedQuery(name = "Images.findById", query = "SELECT i FROM Images i WHERE i.id = :id")})
 public class Images implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected ImagesPK imagesPK;
+    @Id
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "ID")
+    private Integer id;
+    @Basic(optional = false)
+    @NotNull
     @Lob
     @Column(name = "Image")
     private byte[] image;
-    @JoinColumn(name = "Item_ID", referencedColumnName = "ID", insertable = false, updatable = false)
+    @JoinColumn(name = "Item_ID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
-    private Item item;
+    private Item itemID;
 
     public Images() {
     }
 
-    public Images(ImagesPK imagesPK) {
-        this.imagesPK = imagesPK;
+    public Images(Integer id) {
+        this.id = id;
     }
 
-    public Images(int itemID, int id) {
-        this.imagesPK = new ImagesPK(itemID, id);
+    public Images(Integer id, byte[] image) {
+        this.id = id;
+        this.image = image;
     }
 
-    public ImagesPK getImagesPK() {
-        return imagesPK;
+    public Integer getId() {
+        return id;
     }
 
-    public void setImagesPK(ImagesPK imagesPK) {
-        this.imagesPK = imagesPK;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public byte[] getImage() {
@@ -67,18 +74,18 @@ public class Images implements Serializable {
         this.image = image;
     }
 
-    public Item getItem() {
-        return item;
+    public Item getItemID() {
+        return itemID;
     }
 
-    public void setItem(Item item) {
-        this.item = item;
+    public void setItemID(Item itemID) {
+        this.itemID = itemID;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (imagesPK != null ? imagesPK.hashCode() : 0);
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
@@ -89,7 +96,7 @@ public class Images implements Serializable {
             return false;
         }
         Images other = (Images) object;
-        if ((this.imagesPK == null && other.imagesPK != null) || (this.imagesPK != null && !this.imagesPK.equals(other.imagesPK))) {
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
@@ -97,7 +104,7 @@ public class Images implements Serializable {
 
     @Override
     public String toString() {
-        return "com.mycompany.backend.classes.Images[ imagesPK=" + imagesPK + " ]";
+        return "classes.Images[ id=" + id + " ]";
     }
     
 }

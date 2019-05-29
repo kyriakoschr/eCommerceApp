@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.backend.classes.service;
+package classes.service;
 
-import com.mycompany.backend.classes.Messages;
-import com.mycompany.backend.classes.MessagesPK;
+import classes.Messages;
+import classes.MessagesPK;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -27,7 +27,7 @@ import javax.ws.rs.core.PathSegment;
  * @author kc
  */
 @Stateless
-@Path("com.mycompany.backend.classes.messages")
+@Path("classes.messages")
 public class MessagesFacadeREST extends AbstractFacade<Messages> {
 
     @PersistenceContext(unitName = "com.mycompany_backEnd_war_1.0-SNAPSHOTPU")
@@ -41,7 +41,7 @@ public class MessagesFacadeREST extends AbstractFacade<Messages> {
          * it is ignored in the following code.
          * Matrix parameters are used as field names to build a primary key instance.
          */
-        com.mycompany.backend.classes.MessagesPK key = new com.mycompany.backend.classes.MessagesPK();
+        classes.MessagesPK key = new classes.MessagesPK();
         javax.ws.rs.core.MultivaluedMap<String, String> map = pathSegment.getMatrixParameters();
         java.util.List<String> fromUserID = map.get("fromUserID");
         if (fromUserID != null && !fromUserID.isEmpty()) {
@@ -79,7 +79,7 @@ public class MessagesFacadeREST extends AbstractFacade<Messages> {
     @DELETE
     @Path("{id}")
     public void remove(@PathParam("id") PathSegment id) {
-        com.mycompany.backend.classes.MessagesPK key = getPrimaryKey(id);
+        classes.MessagesPK key = getPrimaryKey(id);
         super.remove(super.find(key));
     }
 
@@ -87,7 +87,7 @@ public class MessagesFacadeREST extends AbstractFacade<Messages> {
     @Path("{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Messages find(@PathParam("id") PathSegment id) {
-        com.mycompany.backend.classes.MessagesPK key = getPrimaryKey(id);
+        classes.MessagesPK key = getPrimaryKey(id);
         return super.find(key);
     }
 

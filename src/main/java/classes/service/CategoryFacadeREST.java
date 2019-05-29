@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.backend.classes.service;
+package classes.service;
 
-import com.mycompany.backend.classes.User;
+import classes.Category;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -25,27 +25,27 @@ import javax.ws.rs.core.MediaType;
  * @author kc
  */
 @Stateless
-@Path("com.mycompany.backend.classes.user")
-public class UserFacadeREST extends AbstractFacade<User> {
+@Path("classes.category")
+public class CategoryFacadeREST extends AbstractFacade<Category> {
 
     @PersistenceContext(unitName = "com.mycompany_backEnd_war_1.0-SNAPSHOTPU")
     private EntityManager em;
 
-    public UserFacadeREST() {
-        super(User.class);
+    public CategoryFacadeREST() {
+        super(Category.class);
     }
 
     @POST
     @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void create(User entity) {
+    public void create(Category entity) {
         super.create(entity);
     }
 
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void edit(@PathParam("id") String id, User entity) {
+    public void edit(@PathParam("id") String id, Category entity) {
         super.edit(entity);
     }
 
@@ -58,21 +58,21 @@ public class UserFacadeREST extends AbstractFacade<User> {
     @GET
     @Path("{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public User find(@PathParam("id") String id) {
+    public Category find(@PathParam("id") String id) {
         return super.find(id);
     }
 
     @GET
     @Override
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<User> findAll() {
+    public List<Category> findAll() {
         return super.findAll();
     }
 
     @GET
     @Path("{from}/{to}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<User> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
+    public List<Category> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
     }
 

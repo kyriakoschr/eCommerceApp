@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.backend.classes;
+package classes;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -118,7 +118,7 @@ public class Bids implements Serializable {
 
     @Override
     public String toString() {
-        return "com.mycompany.backend.classes.Bids[ bidsPK=" + bidsPK + " ]";
+        return "classes.Bids[ bidsPK=" + bidsPK + " ]";
     }
     
 }

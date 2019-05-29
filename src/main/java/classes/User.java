@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.backend.classes;
+package classes;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -90,7 +90,7 @@ public class User implements Serializable {
     @Size(max = 45)
     @Column(name = "Rating")
     private String rating;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sellerID")
     private Collection<Item> itemCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Collection<Messages> messagesCollection;
@@ -255,7 +255,7 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "com.mycompany.backend.classes.User[ username=" + username + " ]";
+        return "classes.User[ username=" + username + " ]";
     }
     
 }

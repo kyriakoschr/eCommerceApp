@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.backend.classes;
+package classes;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
@@ -97,7 +97,7 @@ public class MessagesPK implements Serializable {
 
     @Override
     public String toString() {
-        return "com.mycompany.backend.classes.MessagesPK[ fromUserID=" + fromUserID + ", toUserID=" + toUserID + ", id=" + id + " ]";
+        return "classes.MessagesPK[ fromUserID=" + fromUserID + ", toUserID=" + toUserID + ", id=" + id + " ]";
     }
     
 }
