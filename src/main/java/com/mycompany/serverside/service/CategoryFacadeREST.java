@@ -25,7 +25,7 @@ import javax.ws.rs.core.MediaType;
  * @author kc
  */
 @Stateless
-@Path("com.mycompany.serverside.category")
+@Path("category")
 public class CategoryFacadeREST extends AbstractFacade<Category> {
 
     @PersistenceContext(unitName = "com.mycompany_serverSide_war_1.0-SNAPSHOTPU")

@@ -27,7 +27,7 @@ import javax.ws.rs.core.PathSegment;
  * @author kc
  */
 @Stateless
-@Path("com.mycompany.serverside.bids")
+@Path("bids")
 public class BidsFacadeREST extends AbstractFacade<Bids> {
 
     @PersistenceContext(unitName = "com.mycompany_serverSide_war_1.0-SNAPSHOTPU")
