@@ -81,14 +81,12 @@ public class MessagesFacadeREST extends AbstractFacade<Messages> {
     @Path("count/{to}")
     @Produces(MediaType.TEXT_PLAIN)
     public String countREST(@PathParam("to") String to) {
-        System.out.println(to+" !!!!!!!!!!!!!!!!!!!!!!!!");
         long msgs = (long) em.createNamedQuery("Messages.findBySeenTo")
                 .setParameter("seen",false)
                 .setParameter("toUserID",em.createNamedQuery("User.findByUsername")
                                         .setParameter("username", to)
                                         .getSingleResult()   )
                 .getSingleResult();
-        System.out.println(msgs);
         return String.valueOf(msgs);
     }
 
