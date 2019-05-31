@@ -6,6 +6,7 @@
 package com.mycompany.serverside.service;
 
 import com.mycompany.serverside.Messages;
+import com.mycompany.serverside.User;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -77,10 +78,18 @@ public class MessagesFacadeREST extends AbstractFacade<Messages> {
     }
 
     @GET
-    @Path("count")
+    @Path("count/{to}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String countREST() {
-        return String.valueOf(super.count());
+    public String countREST(@PathParam("to") String to) {
+        System.out.println(to+" !!!!!!!!!!!!!!!!!!!!!!!!");
+        long msgs = (long) em.createNamedQuery("Messages.findBySeenTo")
+                .setParameter("seen",false)
+                .setParameter("toUserID",em.createNamedQuery("User.findByUsername")
+                                        .setParameter("username", to)
+                                        .getSingleResult()   )
+                .getSingleResult();
+        System.out.println(msgs);
+        return String.valueOf(msgs);
     }
 
     @Override

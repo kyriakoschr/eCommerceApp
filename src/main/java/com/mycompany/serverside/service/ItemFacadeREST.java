@@ -52,7 +52,9 @@ public class ItemFacadeREST extends AbstractFacade<Item> {
     @DELETE
     @Path("{id}")
     public void remove(@PathParam("id") Integer id) {
-        super.remove(super.find(id));
+        int res=(int) em.createNamedQuery("Item.findByNumofbids").setParameter("id",id).getSingleResult();
+        if(res==0)
+            super.remove(super.find(id));
     }
 
     @GET

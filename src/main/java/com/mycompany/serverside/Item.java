@@ -40,7 +40,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Item.findByName", query = "SELECT i FROM Item i WHERE i.name = :name"),
     @NamedQuery(name = "Item.findByCurrentPrice", query = "SELECT i FROM Item i WHERE i.currentPrice = :currentPrice"),
     @NamedQuery(name = "Item.findByFirstBid", query = "SELECT i FROM Item i WHERE i.firstBid = :firstBid"),
-    @NamedQuery(name = "Item.findByNumofbids", query = "SELECT i FROM Item i WHERE i.numofbids = :numofbids"),
+    @NamedQuery(name = "Item.findByNumofbids", query = "SELECT i.numofbids FROM Item i WHERE i.id = :id"),
     @NamedQuery(name = "Item.findByLocation", query = "SELECT i FROM Item i WHERE i.location = :location"),
     @NamedQuery(name = "Item.findByCountry", query = "SELECT i FROM Item i WHERE i.country = :country"),
     @NamedQuery(name = "Item.findByStartDate", query = "SELECT i FROM Item i WHERE i.startDate = :startDate"),
