@@ -6,6 +6,7 @@
 package com.mycompany.serverside;
 
 import java.io.Serializable;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,6 +43,7 @@ public class Images implements Serializable {
     private byte[] image;
     @JoinColumn(name = "Item_ID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
+    @JsonbTransient
     private Item itemID;
 
     public Images() {

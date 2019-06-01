@@ -40,7 +40,20 @@ public class MessagesFacadeREST extends AbstractFacade<Messages> {
     @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void create(Messages entity) {
-        super.create(entity);
+        User to=entity.getToUserID();
+        User from=entity.getFromUserID();
+        long res = (long) em.createQuery("Select count(b) from Bids b,Item i "
+                + "where (b.user=:bidder and b.item= i and i.sellerID=:seller "
+                + "and i.endDate < CURRENT_TIMESTAMP "
+                + "and b.amount in (select max(bb.amount) from Bids bb where bb.item=i)) "
+                + "or (b.user=:seller and b.item= i and i.sellerID=:bidder "
+                + "and i.endDate < CURRENT_TIMESTAMP "
+                + "and b.amount in (select max(bb.amount) from Bids bb where bb.item=i))")
+                .setParameter("bidder", from)
+                .setParameter("seller", to)
+                .getSingleResult();
+        if(res>0)
+            super.create(entity);
     }
 
     @PUT

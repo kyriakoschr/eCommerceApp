@@ -7,6 +7,7 @@ package com.mycompany.serverside;
 
 import java.io.Serializable;
 import java.util.Collection;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -45,6 +46,7 @@ public class Category implements Serializable {
         @JoinColumn(name = "Category_Name", referencedColumnName = "Name")}, inverseJoinColumns = {
         @JoinColumn(name = "Item_ID", referencedColumnName = "ID")})
     @ManyToMany
+    @JsonbTransient
     private Collection<Item> itemCollection;
 
     public Category() {

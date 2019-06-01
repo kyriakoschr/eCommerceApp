@@ -7,6 +7,7 @@ package com.mycompany.serverside;
 
 import java.io.Serializable;
 import java.util.Date;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -40,9 +41,11 @@ public class Bids implements Serializable {
     private Float amount;
     @JoinColumn(name = "Item_ID", referencedColumnName = "ID", insertable = false, updatable = false)
     @ManyToOne(optional = false)
+    @JsonbTransient
     private Item item;
     @JoinColumn(name = "Bidder_ID", referencedColumnName = "Username", insertable = false, updatable = false)
     @ManyToOne(optional = false)
+    @JsonbTransient
     private User user;
 
     public Bids() {

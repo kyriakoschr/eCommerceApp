@@ -6,6 +6,7 @@
 package com.mycompany.serverside.service;
 
 import com.mycompany.serverside.Item;
+import com.mycompany.serverside.User;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -70,7 +71,16 @@ public class ItemFacadeREST extends AbstractFacade<Item> {
     public List<Item> findAll() {
         return super.findAll();
     }
-
+    
+    @GET
+    @Path("seller/{seller}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Item> findbySeller(@PathParam("seller") String sellerID ) {
+        User seller=(User) em.createNamedQuery("User.findByUsername").setParameter("username",sellerID).getSingleResult();
+        System.out.println("!!!!!!!!!!!!!!!!!!"+seller.getName());
+        return em.createNamedQuery("Item.findBySeller").setParameter("sellerID",seller).getResultList();
+    }
+    
     @GET
     @Path("{from}/{to}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})

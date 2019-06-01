@@ -8,6 +8,7 @@ package com.mycompany.serverside;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -45,7 +46,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Item.findByCountry", query = "SELECT i FROM Item i WHERE i.country = :country"),
     @NamedQuery(name = "Item.findByStartDate", query = "SELECT i FROM Item i WHERE i.startDate = :startDate"),
     @NamedQuery(name = "Item.findByEndDate", query = "SELECT i FROM Item i WHERE i.endDate = :endDate"),
-    @NamedQuery(name = "Item.findByDescription", query = "SELECT i FROM Item i WHERE i.description = :description")})
+    @NamedQuery(name = "Item.findByDescription", query = "SELECT i FROM Item i WHERE i.description = :description"),
+    @NamedQuery(name = "Item.findBySeller", query = "SELECT i FROM Item i WHERE i.sellerID = :sellerID")})
 public class Item implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -85,8 +87,10 @@ public class Item implements Serializable {
     @ManyToOne(optional = false)
     private User sellerID;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "itemID")
+    @JsonbTransient
     private Collection<Images> imagesCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "item")
+    @JsonbTransient
     private Collection<Bids> bidsCollection;
 
     public Item() {

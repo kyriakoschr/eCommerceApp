@@ -7,6 +7,7 @@ package com.mycompany.serverside;
 
 import java.io.Serializable;
 import java.util.Collection;
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -81,12 +82,16 @@ public class User implements Serializable {
     @Column(name = "Rating")
     private Long rating;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sellerID")
+    @JsonbTransient
     private Collection<Item> itemCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fromUserID")
+    @JsonbTransient
     private Collection<Messages> messagesCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "toUserID")
+    @JsonbTransient
     private Collection<Messages> messagesCollection1;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @JsonbTransient
     private Collection<Bids> bidsCollection;
 
     public User() {
