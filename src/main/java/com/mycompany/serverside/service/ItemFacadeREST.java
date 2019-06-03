@@ -20,6 +20,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
@@ -100,6 +101,15 @@ public class ItemFacadeREST extends AbstractFacade<Item> {
         return super.find(id);
     }
 
+    @GET
+    @Path("byDesc/{words}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Collection<Item> find(@PathParam("words") String words) {
+        Query query = em.createNativeQuery("select * from Item where match (Description,Name) against (? in natural language MODE)",Item.class);
+        query.setParameter(1, words);
+        return query.getResultList();
+    }
+    
     @GET
     @Override
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
