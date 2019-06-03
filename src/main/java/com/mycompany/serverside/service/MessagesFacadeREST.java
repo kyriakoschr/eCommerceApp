@@ -7,6 +7,7 @@ package com.mycompany.serverside.service;
 
 import com.mycompany.serverside.Messages;
 import com.mycompany.serverside.User;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -42,6 +43,8 @@ public class MessagesFacadeREST extends AbstractFacade<Messages> {
     public void create(Messages entity) {
         User to=entity.getToUserID();
         User from=entity.getFromUserID();
+        entity.setSeen(false);
+        entity.setDateTime(new Date());
         long res = (long) em.createQuery("Select count(b) from Bids b,Item i "
                 + "where (b.user=:bidder and b.item= i and i.sellerID=:seller "
                 + "and i.endDate < CURRENT_TIMESTAMP "
@@ -75,7 +78,25 @@ public class MessagesFacadeREST extends AbstractFacade<Messages> {
     public Messages find(@PathParam("id") Integer id) {
         return super.find(id);
     }
+    
+    @GET
+    @Path("from/{id}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Messages> findfrom(@PathParam("id") String id) {
+        User from = (User) em.createNamedQuery("User.findByUsername").setParameter("username", id).getSingleResult();
+        List<Messages> res = em.createNamedQuery("Messages.findByFrom").setParameter("from",from).getResultList();
+        return res;
+    }
 
+    @GET
+    @Path("to/{id}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Messages> findto(@PathParam("id") String id) {
+        User to = (User) em.createNamedQuery("User.findByUsername").setParameter("username", id).getSingleResult();
+        List<Messages> res = em.createNamedQuery("Messages.findByTo").setParameter("to",to).getResultList();
+        return res;
+    }
+    
     @GET
     @Override
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})

@@ -5,10 +5,15 @@
  */
 package com.mycompany.serverside;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -48,10 +53,10 @@ public class Category implements Serializable {
     @JoinTable(name = "Item_has_Category", joinColumns = {
         @JoinColumn(name = "Category_Name", referencedColumnName = "Name")}, inverseJoinColumns = {
         @JoinColumn(name = "Item_ID", referencedColumnName = "ID")})
-    @ManyToMany
-    @JsonbTransient
-    private Collection<Item> itemCollection;
-    
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,CascadeType.REFRESH})
+    @JsonIgnore
+    private Set<Item> itemCollection= new HashSet<Item>();
+
     public Category() {
     }
 
@@ -66,13 +71,19 @@ public class Category implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+    
+    public void addItem(Item item){
+        itemCollection.add(item);
+    }
 
     @XmlTransient
-    public Collection<Item> getItemCollection() {
+    @JsonbTransient
+    @JsonIgnore
+    public Set<Item> getItemCollection() {
         return itemCollection;
     }
 
-    public void setItemCollection(Collection<Item> itemCollection) {
+    public void setItemCollection(HashSet<Item> itemCollection) {
         this.itemCollection = itemCollection;
     }
 

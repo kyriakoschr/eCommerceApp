@@ -7,6 +7,8 @@ package com.mycompany.serverside.service;
 
 import com.mycompany.serverside.Bids;
 import com.mycompany.serverside.BidsPK;
+import com.mycompany.serverside.Item;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -66,7 +68,19 @@ public class BidsFacadeREST extends AbstractFacade<Bids> {
     @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void create(Bids entity) {
-        super.create(entity);
+        Item item=(Item) em.createNamedQuery("Item.findById").setParameter("id",entity.getBidsPK().getItemID()).getSingleResult();
+        BidsPK pk = entity.getBidsPK();
+        pk.setDateTime(new Date());
+        entity.setBidsPK(pk);
+        if(entity.getAmount()>item.getCurrentPrice()) {
+            if(entity.getBidsPK().getDateTime().compareTo(item.getEndDate())<0) {
+                if(!item.getSellerID().equals(entity.getUser())){
+                    item.addBid(entity.getAmount());
+                    em.merge(item);
+                    super.create(entity);
+                }
+            }
+        }
     }
 
     @PUT
