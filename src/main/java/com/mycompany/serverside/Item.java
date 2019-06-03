@@ -5,14 +5,20 @@
  */
 package com.mycompany.serverside;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
@@ -20,6 +26,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -48,13 +55,15 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Item.findByEndDate", query = "SELECT i FROM Item i WHERE i.endDate = :endDate"),
     @NamedQuery(name = "Item.findByDescription", query = "SELECT i FROM Item i WHERE i.description = :description"),
     @NamedQuery(name = "Item.findBySeller", query = "SELECT i FROM Item i WHERE i.sellerID = :sellerID")})
+@SequenceGenerator(name="seq", initialValue=1, allocationSize=1)
 public class Item implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
-    @NotNull
+//    @NotNull
     @Column(name = "ID")
+    @GeneratedValue (strategy=GenerationType.SEQUENCE, generator="seq")
     private Integer id;
     @Size(max = 45)
     @Column(name = "Name")
@@ -81,8 +90,9 @@ public class Item implements Serializable {
     @Size(max = 256)
     @Column(name = "Description")
     private String description;
-    @ManyToMany(mappedBy = "itemCollection")
-    private Collection<Category> categoryCollection;
+    @ManyToMany(mappedBy = "itemCollection",cascade = {CascadeType.PERSIST, CascadeType.MERGE,CascadeType.REFRESH})
+    @JsonIgnore
+    private Set<Category> categoryCollection = new HashSet<Category>();
     @JoinColumn(name = "Seller_ID", referencedColumnName = "Username")
     @ManyToOne(optional = false)
     private User sellerID;
@@ -176,16 +186,20 @@ public class Item implements Serializable {
         return description;
     }
 
+    public void addCategory(Category cat){
+        categoryCollection.add(cat);
+    }
+    
     public void setDescription(String description) {
         this.description = description;
     }
 
     @XmlTransient
-    public Collection<Category> getCategoryCollection() {
+    public Set<Category> getCategoryCollection() {
         return categoryCollection;
     }
-
-    public void setCategoryCollection(Collection<Category> categoryCollection) {
+    
+    public void setCategoryCollection(HashSet<Category> categoryCollection) {
         this.categoryCollection = categoryCollection;
     }
 
@@ -197,7 +211,14 @@ public class Item implements Serializable {
         this.sellerID = sellerID;
     }
 
+    public void addBid(float bid){
+        numofbids++;
+        currentPrice=bid;
+    }
+    
     @XmlTransient
+    @JsonbTransient
+    @JsonIgnore
     public Collection<Images> getImagesCollection() {
         return imagesCollection;
     }
@@ -207,6 +228,8 @@ public class Item implements Serializable {
     }
 
     @XmlTransient
+    @JsonbTransient
+    @JsonIgnore
     public Collection<Bids> getBidsCollection() {
         return bidsCollection;
     }

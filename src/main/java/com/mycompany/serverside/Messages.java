@@ -35,6 +35,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Messages.findById", query = "SELECT m FROM Messages m WHERE m.id = :id"),
     @NamedQuery(name = "Messages.findByDateTime", query = "SELECT m FROM Messages m WHERE m.dateTime = :dateTime"),
     @NamedQuery(name = "Messages.findByMessage", query = "SELECT m FROM Messages m WHERE m.message = :message"),
+    @NamedQuery(name = "Messages.findByFrom", query = "SELECT m FROM Messages m WHERE m.fromUserID = :from"),
+    @NamedQuery(name = "Messages.findByTo", query = "SELECT m FROM Messages m WHERE m.toUserID = :to"),
     @NamedQuery(name = "Messages.findBySeenTo", query = "SELECT count(m) FROM Messages m WHERE m.seen = :seen and m.toUserID = :toUserID")})
 public class Messages implements Serializable {
 

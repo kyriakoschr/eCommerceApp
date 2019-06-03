@@ -5,12 +5,27 @@
  */
 package com.mycompany.serverside.service;
 
+import com.mycompany.serverside.Category;
 import com.mycompany.serverside.Item;
 import com.mycompany.serverside.User;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -40,7 +55,27 @@ public class ItemFacadeREST extends AbstractFacade<Item> {
     @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void create(Item entity) {
-        super.create(entity);
+        HashSet<Category> categories = (HashSet<Category>) entity.getCategoryCollection();
+//        System.out.println(entity.getId());
+        for (Category cat : categories) {
+            System.out.println(cat.getName());
+            List<Category> temp = (List<Category>)em.createNamedQuery("Category.findByName").setParameter("name", cat.getName()).getResultList();
+            if(temp.isEmpty()){
+                System.out.println("FOUND NEW!!!!!!!!!!!!!!!!!!!!");
+                cat.addItem(entity);
+                em.persist(cat);              
+            }
+            else{
+                System.out.println("FOUND existing !!!!!!!!!!!!!!!!!!!!");
+                entity.setCategoryCollection(new HashSet<Category>());
+                super.create(entity);
+                em.flush();
+                temp.get(0).addItem(entity);
+                em.persist(entity);
+                em.persist(temp.get(0));
+                em.flush();
+            }
+        }
     }
 
     @PUT
@@ -77,7 +112,6 @@ public class ItemFacadeREST extends AbstractFacade<Item> {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Item> findbySeller(@PathParam("seller") String sellerID ) {
         User seller=(User) em.createNamedQuery("User.findByUsername").setParameter("username",sellerID).getSingleResult();
-        System.out.println("!!!!!!!!!!!!!!!!!!"+seller.getName());
         return em.createNamedQuery("Item.findBySeller").setParameter("sellerID",seller).getResultList();
     }
     
