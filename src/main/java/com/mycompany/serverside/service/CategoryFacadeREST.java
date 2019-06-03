@@ -6,6 +6,8 @@
 package com.mycompany.serverside.service;
 
 import com.mycompany.serverside.Category;
+import com.mycompany.serverside.Item;
+import java.util.Collection;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -81,6 +83,13 @@ public class CategoryFacadeREST extends AbstractFacade<Category> {
     @Produces(MediaType.TEXT_PLAIN)
     public String countREST() {
         return String.valueOf(super.count());
+    }
+    
+    @GET
+    @Path("ibc/{category}")
+    public Collection<Item> find_itCategory(@PathParam("category") String category) {
+        Category cat = find(category);
+        return cat.getItemCollection();
     }
 
     @Override
