@@ -1,4 +1,4 @@
-package utilities;
+package com.mycompany.serverside.utilities;
 
 import java.security.Key;
 

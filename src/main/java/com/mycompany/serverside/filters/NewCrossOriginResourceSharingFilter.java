@@ -12,7 +12,7 @@ import javax.ws.rs.ext.Provider;
 
 /**
  *
- * @author ihamod
+ * @author kc
  */
 @Provider
 public class NewCrossOriginResourceSharingFilter implements ContainerResponseFilter {
