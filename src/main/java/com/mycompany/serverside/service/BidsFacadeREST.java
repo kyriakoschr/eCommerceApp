@@ -8,6 +8,7 @@ package com.mycompany.serverside.service;
 import com.mycompany.serverside.Bids;
 import com.mycompany.serverside.BidsPK;
 import com.mycompany.serverside.Item;
+import com.mycompany.serverside.filters.AuthenticationFilter;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -16,6 +17,7 @@ import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -65,9 +67,9 @@ public class BidsFacadeREST extends AbstractFacade<Bids> {
     }
 
     @POST
-    @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void create(Bids entity) {
+    public void create(@HeaderParam("Authorization") String token,Bids entity) throws Exception {
+        AuthenticationFilter.filter(token);
         Item item=(Item) em.createNamedQuery("Item.findById").setParameter("id",entity.getBidsPK().getItemID()).getSingleResult();
         BidsPK pk = entity.getBidsPK();
         pk.setDateTime(new Date());
@@ -86,13 +88,15 @@ public class BidsFacadeREST extends AbstractFacade<Bids> {
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void edit(@PathParam("id") PathSegment id, Bids entity) {
+    public void edit(@HeaderParam("Authorization") String token,@PathParam("id") PathSegment id, Bids entity) throws Exception {
+        AuthenticationFilter.filter(token);
         super.edit(entity);
     }
 
     @DELETE
     @Path("{id}")
-    public void remove(@PathParam("id") PathSegment id) {
+    public void remove(@HeaderParam("Authorization") String token,@PathParam("id") PathSegment id) throws Exception {
+        AuthenticationFilter.filter(token);
         com.mycompany.serverside.BidsPK key = getPrimaryKey(id);
         super.remove(super.find(key));
     }

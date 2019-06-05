@@ -6,19 +6,31 @@
 package com.mycompany.serverside.service;
 
 import com.mycompany.serverside.Images;
+import com.mycompany.serverside.Item;
+import com.mycompany.serverside.filters.AuthenticationFilter;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import jdk.nashorn.internal.parser.JSONParser;
+import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
+import sun.misc.IOUtils;
 
 /**
  *
@@ -36,10 +48,27 @@ public class ImagesFacadeREST extends AbstractFacade<Images> {
     }
 
     @POST
-    @Override
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void create(Images entity) {
-        super.create(entity);
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public void create(@FormDataParam("image") InputStream uploadedInputStream,
+            @FormDataParam("data") String data,@HeaderParam("Authorization") String token) throws IOException, JSONException, Exception {
+        AuthenticationFilter.filter(token);
+        if (uploadedInputStream != null && data != null){
+            Images entity = new Images();
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            int nRead;
+            byte[] bytes = new byte[16384];
+            while ((nRead = uploadedInputStream.read(bytes, 0, bytes.length)) != -1) {
+              buffer.write(bytes, 0, nRead);
+            }
+            entity.setImage(buffer.toByteArray());
+            JSONObject jsonObj = new JSONObject(data);
+            Item item;
+            item = (Item) em.createNamedQuery("Item.findById").setParameter("id",jsonObj.getJSONObject("item").getInt("id")).getSingleResult();
+            entity.setId(jsonObj.getInt("id"));
+            entity.setItemID(item);
+            uploadedInputStream.close();
+            super.create(entity);
+        }
     }
 
     @PUT

@@ -8,6 +8,7 @@ package com.mycompany.serverside.service;
 import com.mycompany.serverside.Category;
 import com.mycompany.serverside.Item;
 import com.mycompany.serverside.User;
+import com.mycompany.serverside.filters.AuthenticationFilter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -30,6 +31,7 @@ import javax.transaction.UserTransaction;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -53,9 +55,9 @@ public class ItemFacadeREST extends AbstractFacade<Item> {
     }
 
     @POST
-    @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void create(Item entity) {
+    public void create(@HeaderParam("Authorization") String token,Item entity) throws Exception {
+        AuthenticationFilter.filter(token);
         HashSet<Category> categories = (HashSet<Category>) entity.getCategoryCollection();
 //        System.out.println(entity.getId());
         for (Category cat : categories) {
@@ -82,13 +84,15 @@ public class ItemFacadeREST extends AbstractFacade<Item> {
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void edit(@PathParam("id") Integer id, Item entity) {
+    public void edit(@HeaderParam("Authorization") String token,@PathParam("id") Integer id, Item entity) throws Exception {
+        AuthenticationFilter.filter(token);
         super.edit(entity);
     }
 
     @DELETE
     @Path("{id}")
-    public void remove(@PathParam("id") Integer id) {
+    public void remove(@HeaderParam("Authorization") String token,@PathParam("id") Integer id) throws Exception {
+        AuthenticationFilter.filter(token);
         int res=(int) em.createNamedQuery("Item.findByNumofbids").setParameter("id",id).getSingleResult();
         if(res==0)
             super.remove(super.find(id));
@@ -97,7 +101,7 @@ public class ItemFacadeREST extends AbstractFacade<Item> {
     @GET
     @Path("{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Item find(@PathParam("id") Integer id) {
+    public Item find(@PathParam("id") Integer    id) {
         return super.find(id);
     }
 

@@ -43,7 +43,6 @@ public class Images implements Serializable {
     private byte[] image;
     @JoinColumn(name = "Item_ID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
-    @JsonbTransient
     private Item itemID;
 
     public Images() {

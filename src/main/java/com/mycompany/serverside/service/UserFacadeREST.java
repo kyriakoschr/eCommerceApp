@@ -6,6 +6,7 @@
 package com.mycompany.serverside.service;
 
 import com.mycompany.serverside.User;
+import com.mycompany.serverside.filters.AuthenticationFilter;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -13,6 +14,7 @@ import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -45,28 +47,30 @@ public class UserFacadeREST extends AbstractFacade<User> {
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void edit(@PathParam("id") String id, User entity) {
+    public void edit(@HeaderParam("Authorization") String token, @PathParam("id") String id, User entity) throws Exception {
+        AuthenticationFilter.filter(token);
         super.edit(entity);
     }
 
     @DELETE
     @Path("{id}")
-    public void remove(@PathParam("id") String id) {
+    public void remove(@HeaderParam("Authorization") String token,@PathParam("id") String id) throws Exception {
+        AuthenticationFilter.filter(token);
         super.remove(super.find(id));
     }
 
     @GET
     @Path("{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public User find(@PathParam("id") String id) {
-        System.out.println(id);
+    public User find(@PathParam("id") String id,@HeaderParam("Authorization") String token) throws Exception {
+        AuthenticationFilter.filter(token);
         return super.find(id);
     }
 
     @GET
-    @Override
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<User> findAll() {
+    public List<User> findAll(@HeaderParam("Authorization") String token) throws Exception {
+        AuthenticationFilter.filter(token);
         return super.findAll();
     }
 

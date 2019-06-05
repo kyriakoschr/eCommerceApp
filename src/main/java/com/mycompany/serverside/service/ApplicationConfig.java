@@ -7,6 +7,7 @@ package com.mycompany.serverside.service;
 
 import java.util.Set;
 import javax.ws.rs.core.Application;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
 /**
  *
@@ -35,6 +36,8 @@ public class ApplicationConfig extends Application {
         resources.add(com.mycompany.serverside.service.ItemFacadeREST.class);
         resources.add(com.mycompany.serverside.service.MessagesFacadeREST.class);
         resources.add(com.mycompany.serverside.service.UserFacadeREST.class);
+        resources.add(com.mycompany.serverside.service.LoginFacadeREST.class);
+        resources.add(MultiPartFeature.class);
     }
     
 }

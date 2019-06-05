@@ -7,14 +7,18 @@ package com.mycompany.serverside.service;
 
 import com.mycompany.serverside.Messages;
 import com.mycompany.serverside.User;
+import com.mycompany.serverside.filters.AuthenticationFilter;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -38,9 +42,9 @@ public class MessagesFacadeREST extends AbstractFacade<Messages> {
     }
 
     @POST
-    @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void create(Messages entity) {
+    public void create(Messages entity,@HeaderParam("Authorization") String token) throws Exception {
+        AuthenticationFilter.filter(token);
         User to=entity.getToUserID();
         User from=entity.getFromUserID();
         entity.setSeen(false);
@@ -62,27 +66,31 @@ public class MessagesFacadeREST extends AbstractFacade<Messages> {
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void edit(@PathParam("id") Integer id, Messages entity) {
+    public void edit(@HeaderParam("Authorization") String token,@PathParam("id") Integer id, Messages entity) throws Exception {
+        AuthenticationFilter.filter(token);
         super.edit(entity);
     }
 
     @DELETE
     @Path("{id}")
-    public void remove(@PathParam("id") Integer id) {
+    public void remove(@HeaderParam("Authorization") String token,@PathParam("id") Integer id) throws Exception {
+        AuthenticationFilter.filter(token);
         super.remove(super.find(id));
     }
 
     @GET
     @Path("{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Messages find(@PathParam("id") Integer id) {
+    public Messages find(@HeaderParam("Authorization") String token,@PathParam("id") Integer id) throws Exception {
+        AuthenticationFilter.filter(token);
         return super.find(id);
     }
     
     @GET
     @Path("from/{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Messages> findfrom(@PathParam("id") String id) {
+    public List<Messages> findfrom(@HeaderParam("Authorization") String token,@PathParam("id") String id) throws Exception {
+        AuthenticationFilter.filter(token);
         User from = (User) em.createNamedQuery("User.findByUsername").setParameter("username", id).getSingleResult();
         List<Messages> res = em.createNamedQuery("Messages.findByFrom").setParameter("from",from).getResultList();
         return res;
@@ -91,16 +99,21 @@ public class MessagesFacadeREST extends AbstractFacade<Messages> {
     @GET
     @Path("to/{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Messages> findto(@PathParam("id") String id) {
+    public List<Messages> findto(@HeaderParam("Authorization") String token,@PathParam("id") String id) throws Exception {
+        AuthenticationFilter.filter(token);
         User to = (User) em.createNamedQuery("User.findByUsername").setParameter("username", id).getSingleResult();
         List<Messages> res = em.createNamedQuery("Messages.findByTo").setParameter("to",to).getResultList();
         return res;
     }
     
     @GET
-    @Override
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Messages> findAll() {
+    public List<Messages> findAll(@HeaderParam("Authorization") String token) {
+        try {
+            AuthenticationFilter.filter(token);
+        } catch (Exception ex) {
+            Logger.getLogger(MessagesFacadeREST.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return super.findAll();
     }
 
@@ -114,13 +127,14 @@ public class MessagesFacadeREST extends AbstractFacade<Messages> {
     @GET
     @Path("count/{to}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String countREST(@PathParam("to") String to) {
+    public String countREST(@HeaderParam("Authorization") String token,@PathParam("to") String to) throws Exception {
+        AuthenticationFilter.filter(token);
         long msgs = (long) em.createNamedQuery("Messages.findBySeenTo")
-                .setParameter("seen",false)
-                .setParameter("toUserID",em.createNamedQuery("User.findByUsername")
-                                        .setParameter("username", to)
-                                        .getSingleResult()   )
-                .getSingleResult();
+        .setParameter("seen",false)
+        .setParameter("toUserID",em.createNamedQuery("User.findByUsername")
+                                .setParameter("username", to)
+                                .getSingleResult()   )
+        .getSingleResult();
         return String.valueOf(msgs);
     }
 
