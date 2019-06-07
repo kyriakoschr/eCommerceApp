@@ -7,6 +7,7 @@ package com.mycompany.serverside.service;
 
 import com.mycompany.serverside.Login;
 import com.mycompany.serverside.User;
+import com.mycompany.serverside.utilities.KeyHolder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.security.Key;
@@ -50,7 +51,7 @@ public class LoginFacadeREST {
     }
     
     private String issueToken(String username) {
-            Key key = utilities.KeyHolder.key;
+            Key key = KeyHolder.key;
             long nowMillis = System.currentTimeMillis();
             Date now = new Date(nowMillis);
             long expMillis = nowMillis + 300000L;

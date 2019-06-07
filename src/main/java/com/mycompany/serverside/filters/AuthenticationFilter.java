@@ -2,9 +2,7 @@ package com.mycompany.serverside.filters;
 
 import java.security.Key;
 import java.util.Date;
-
-
-
+import com.mycompany.serverside.utilities.KeyHolder;
 import javax.ws.rs.NotAuthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -24,7 +22,7 @@ public class AuthenticationFilter  {
 
     private static void validateToken(String token) throws Exception {
         
-    	Key key = utilities.KeyHolder.key;
+    	Key key = KeyHolder.key;
     	try {
 
     		Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
