@@ -12,6 +12,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.security.Key;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -71,12 +72,17 @@ public class LoginFacadeREST {
         Query q = em.createQuery("Select u from User u where u.username = :username and u.password = :password");
         q.setParameter("username", username);
         q.setParameter("password", password);
-        List logins =  q.getResultList();
-        if (logins != null && logins.size() == 1)
+        User logins;
+        try {
+            logins =  (User) q.getSingleResult();
+        } catch (Exception ex) {
+            return null;
+        }
+        if (logins!=null)
         {
-            User temp = (User) logins.get(0);
-            login.setPassword(temp.getPassword());
-            login.setUsername(temp.getUsername());
+            System.out.println("Uname: "+logins.getUsername()+"Pw: "+logins.getPassword());
+            login.setPassword(logins.getPassword());
+            login.setUsername(logins.getUsername());
         }
 
         return login;    
