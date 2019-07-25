@@ -40,11 +40,38 @@ public class UserFacadeREST extends AbstractFacade<User> {
     @POST
     @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    //@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void create(User entity) {
-        System.out.println("created "+entity.getPassword()+ "!!!"+entity.getUsername()+ " "+entity.getName()+ " "+entity.getSurname()+ " "+entity.getAddress()+ " "+entity.getCountry()+ " "+entity.getEmail()+ " "+entity.getLocation()+" "+entity.getAfm());
+        System.out.println("CREATE "+entity.getUsername());
+//        List<User> u=(List<User>)em.createNamedQuery("User.findByUsername").setParameter("username", entity.getUsername()).getResultList();
+//        if(!u.isEmpty()){
+//            return;
+//        }
+//        List<User> u2=(List<User>)em.createNamedQuery("User.findByEmail").setParameter("email", entity.getEmail()).getResultList();
+//        if(!u2.isEmpty()){
+//            return null;
+//        }
         super.create(entity);   
+//        return entity;
     }
 
+    @POST
+    @Override
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public int create2(User entity) {
+        System.out.println("CREATE 2"+entity.getUsername());
+        List<User> u=(List<User>)em.createNamedQuery("User.findByUsername").setParameter("username", entity.getUsername()).getResultList();
+        if(!u.isEmpty()){
+            return 1;
+        }
+        List<User> u2=(List<User>)em.createNamedQuery("User.findByEmail").setParameter("email", entity.getEmail()).getResultList();
+        if(!u2.isEmpty()){
+            return 2;
+        }
+        return super.create2(entity);
+    }
+    
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
