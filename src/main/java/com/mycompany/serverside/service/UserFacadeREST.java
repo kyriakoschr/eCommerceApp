@@ -69,6 +69,10 @@ public class UserFacadeREST extends AbstractFacade<User> {
         if(!u2.isEmpty()){
             return 2;
         }
+        List<User> u3=(List<User>)em.createNamedQuery("User.findByAfm").setParameter("afm", entity.getAfm()).getResultList();
+        if(!u3.isEmpty()){
+            return 3;
+        }
         return super.create2(entity);
     }
     
