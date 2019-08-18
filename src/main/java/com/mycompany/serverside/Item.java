@@ -90,7 +90,7 @@ public class Item implements Serializable {
     @Column(name = "Description")
     private String description;
     @ManyToMany(mappedBy = "itemCollection",cascade = {CascadeType.PERSIST, CascadeType.MERGE,CascadeType.REFRESH})
-    @JsonIgnore
+//    @JsonIgnore
     private Set<Category> categoryCollection = new HashSet<Category>();
     @JoinColumn(name = "Seller_ID", referencedColumnName = "Username")
     @ManyToOne(optional = false)

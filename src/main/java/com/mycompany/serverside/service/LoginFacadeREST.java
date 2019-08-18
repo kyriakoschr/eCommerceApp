@@ -55,7 +55,7 @@ public class LoginFacadeREST {
             Key key = KeyHolder.key;
             long nowMillis = System.currentTimeMillis();
             Date now = new Date(nowMillis);
-            long expMillis = nowMillis + 300000L;
+            long expMillis = nowMillis + 3000000L;
             Date exp = new Date(expMillis);
             String jws = Jwts.builder()
                         .setSubject(username)
@@ -63,7 +63,7 @@ public class LoginFacadeREST {
                         .signWith(SignatureAlgorithm.HS512, key)
                         .setExpiration(exp)
                         .compact();
-            return jws;
+            return jws.trim();
     }
     
     private Login login(String username, String password)

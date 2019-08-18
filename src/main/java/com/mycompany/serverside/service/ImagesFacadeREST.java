@@ -48,7 +48,9 @@ public class ImagesFacadeREST extends AbstractFacade<Images> {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public void create(@FormDataParam("image") InputStream uploadedInputStream,
             @FormDataParam("data") String data,@HeaderParam("Authorization") String token) throws IOException, JSONException, Exception {
-        AuthenticationFilter.filter(token);
+        System.out.println("MPIKAME");
+        AuthenticationFilter.filter(token.trim());
+        
         if (uploadedInputStream != null && data != null){
             Images entity = new Images();
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -61,7 +63,6 @@ public class ImagesFacadeREST extends AbstractFacade<Images> {
             JSONObject jsonObj = new JSONObject(data);
             Item item;
             item = (Item) em.createNamedQuery("Item.findById").setParameter("id",jsonObj.getJSONObject("item").getInt("id")).getSingleResult();
-            entity.setId(jsonObj.getInt("id"));
             entity.setItemID(item);
             uploadedInputStream.close();
             super.create(entity);

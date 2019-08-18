@@ -44,7 +44,7 @@ public class ItemFacadeREST extends AbstractFacade<Item> {
 
     @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void create(@HeaderParam("Authorization") String token,Item entity) throws Exception {
+    public int create(@HeaderParam("Authorization") String token,Item entity) throws Exception {
         AuthenticationFilter.filter(token);
         HashSet<Category> categories = (HashSet<Category>) entity.getCategoryCollection();
 //        System.out.println(entity.getId());
@@ -67,6 +67,8 @@ public class ItemFacadeREST extends AbstractFacade<Item> {
                 em.flush();
             }
         }
+        System.out.println("ID of item is "+entity.getId());
+        return entity.getId();
     }
 
     @PUT
