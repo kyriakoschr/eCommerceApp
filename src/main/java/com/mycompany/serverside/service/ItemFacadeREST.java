@@ -97,10 +97,15 @@ public class ItemFacadeREST extends AbstractFacade<Item> {
 
     @GET
     @Path("byDesc/{words}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Collection<Item> find(@PathParam("words") String words) {
+    @Produces({ MediaType.APPLICATION_JSON})
+    public List<Item> find(@PathParam("words") String words) {
+        System.out.println(words);
         Query query = em.createNativeQuery("select * from Item where match (Description,Name) against (? in natural language MODE)",Item.class);
         query.setParameter(1, words);
+        if(query.getResultList().isEmpty()){
+            System.out.println("EMPTY");
+            return null;
+        }
         return query.getResultList();
     }
     
@@ -113,8 +118,9 @@ public class ItemFacadeREST extends AbstractFacade<Item> {
     
     @GET
     @Path("seller/{seller}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Item> findbySeller(@PathParam("seller") String sellerID ) {
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<Item> findbySeller(@HeaderParam("Authorization") String token,@PathParam("seller") String sellerID ) throws Exception {
+//        AuthenticationFilter.filter(token);
         User seller=(User) em.createNamedQuery("User.findByUsername").setParameter("username",sellerID).getSingleResult();
         return em.createNamedQuery("Item.findBySeller").setParameter("sellerID",seller).getResultList();
     }

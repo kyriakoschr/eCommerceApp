@@ -7,8 +7,10 @@ package com.mycompany.serverside.service;
 
 import com.mycompany.serverside.Category;
 import com.mycompany.serverside.Item;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import static java.util.stream.Collectors.toList;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -66,9 +68,13 @@ public class CategoryFacadeREST extends AbstractFacade<Category> {
 
     @GET
     @Override
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Category> findAll() {
-        return super.findAll();
+        List<Category> res = super.findAll();
+        System.out.println(res.size());
+        if(res==null)
+            return null;                    
+        return res;
     }
 
     @GET
@@ -87,9 +93,13 @@ public class CategoryFacadeREST extends AbstractFacade<Category> {
     
     @GET
     @Path("ibc/{category}")
-    public Collection<Item> find_itCategory(@PathParam("category") String category) {
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<Item> find_itCategory(@PathParam("category") String category) {
+        System.out.println(category);
         Category cat = find(category);
-        return cat.getItemCollection();
+        List<Item> res = new ArrayList<Item>();
+        res.addAll(cat.getItemCollection());
+        return res;
     }
 
     @Override

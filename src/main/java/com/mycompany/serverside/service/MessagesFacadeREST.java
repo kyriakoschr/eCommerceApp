@@ -88,7 +88,7 @@ public class MessagesFacadeREST extends AbstractFacade<Messages> {
     
     @GET
     @Path("from/{id}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces( MediaType.APPLICATION_JSON)
     public List<Messages> findfrom(@HeaderParam("Authorization") String token,@PathParam("id") String id) throws Exception {
         AuthenticationFilter.filter(token);
         User from = (User) em.createNamedQuery("User.findByUsername").setParameter("username", id).getSingleResult();
@@ -98,11 +98,14 @@ public class MessagesFacadeREST extends AbstractFacade<Messages> {
 
     @GET
     @Path("to/{id}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces(MediaType.APPLICATION_JSON)
     public List<Messages> findto(@HeaderParam("Authorization") String token,@PathParam("id") String id) throws Exception {
+        System.out.println("B4 AUTH");
         AuthenticationFilter.filter(token);
+        System.out.println("AFTER AUTH");
         User to = (User) em.createNamedQuery("User.findByUsername").setParameter("username", id).getSingleResult();
         List<Messages> res = em.createNamedQuery("Messages.findByTo").setParameter("to",to).getResultList();
+        System.out.println(res.size());
         return res;
     }
     
