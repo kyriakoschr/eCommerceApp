@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.ws.rs.Consumes;
@@ -47,26 +48,45 @@ public class ItemFacadeREST extends AbstractFacade<Item> {
     public int create(@HeaderParam("Authorization") String token,Item entity) throws Exception {
         AuthenticationFilter.filter(token);
         HashSet<Category> categories = (HashSet<Category>) entity.getCategoryCollection();
+        entity.setCategoryCollection(new HashSet<Category>() );
+        super.create(entity);
 //        System.out.println(entity.getId());
         for (Category cat : categories) {
             System.out.println(cat.getName());
-            List<Category> temp = (List<Category>)em.createNamedQuery("Category.findByName").setParameter("name", cat.getName()).getResultList();
-            if(temp.isEmpty()){
+            try{
+                Category temp = (Category)em.createNamedQuery("Category.findByName").setParameter("name", cat.getName()).getSingleResult();
+                System.out.println("FOUND existing !!!!!!!!!!!!!!!!!!!!");
+                cat.addItem(entity);
+                em.merge(entity);
+                em.merge(cat);
+                em.flush();
+//                entity.setCategoryCollection(new HashSet<Category>());
+//                super.create(entity);
+//                em.flush();
+//                temp.get(0).addItem(entity);
+//                em.persist(entity);
+//                em.persist(temp.get(0));
+//                em.flush();
+            }
+            catch(NoResultException e){
                 System.out.println("FOUND NEW!!!!!!!!!!!!!!!!!!!!");
                 cat.addItem(entity);
-                em.persist(cat);              
+                em.merge(cat);  
+                em.merge(entity);
             }
-            else{
-                System.out.println("FOUND existing !!!!!!!!!!!!!!!!!!!!");
-                entity.setCategoryCollection(new HashSet<Category>());
-                super.create(entity);
-                em.flush();
-                temp.get(0).addItem(entity);
-                em.persist(entity);
-                em.persist(temp.get(0));
-                em.flush();
-            }
+//            else{
+//                System.out.println("FOUND existing !!!!!!!!!!!!!!!!!!!!");
+//                entity.setCategoryCollection(new HashSet<Category>());
+//                super.create(entity);
+//            em.flush();
+//                temp.get(0).addItem(entity);
+//        em.persist(entity);
+//                em.persist(temp.get(0));
+//        em.flush();
+//            }
         }
+//        entity.setCategoryCollection(categories);
+//        em.merge(entity);
         System.out.println("ID of item is "+entity.getId());
         return entity.getId();
     }
