@@ -97,7 +97,7 @@ public class Item implements Serializable {
     private User sellerID;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "itemID")
     @JsonbTransient
-    private Collection<Images> imagesCollection;
+    private Set<Images> imagesCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "item")
     @JsonbTransient
     private Collection<Bids> bidsCollection;
@@ -215,14 +215,14 @@ public class Item implements Serializable {
         currentPrice=bid;
     }
     
-    @XmlTransient
-    @JsonbTransient
-    @JsonIgnore
-    public Collection<Images> getImagesCollection() {
+//    @XmlTransient
+//    @JsonbTransient
+//    @JsonIgnore
+    public Set<Images> getImagesCollection() {
         return imagesCollection;
     }
 
-    public void setImagesCollection(Collection<Images> imagesCollection) {
+    public void setImagesCollection(Set<Images> imagesCollection) {
         this.imagesCollection = imagesCollection;
     }
 

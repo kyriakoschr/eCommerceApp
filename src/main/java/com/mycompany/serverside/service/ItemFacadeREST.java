@@ -6,6 +6,7 @@
 package com.mycompany.serverside.service;
 
 import com.mycompany.serverside.Category;
+import com.mycompany.serverside.Images;
 import com.mycompany.serverside.Item;
 import com.mycompany.serverside.User;
 import com.mycompany.serverside.filters.AuthenticationFilter;
@@ -133,7 +134,10 @@ public class ItemFacadeREST extends AbstractFacade<Item> {
     @Override
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public List<Item> findAll() {
-        return super.findAll();
+        List<Item> items= super.findAll();
+        for(Item i:items)
+            i.setImagesCollection(null);
+        return items;
     }
     
     @GET
@@ -159,6 +163,19 @@ public class ItemFacadeREST extends AbstractFacade<Item> {
         return String.valueOf(super.count());
     }
 
+    @GET
+    @Path("images/{id}")
+//    @Produces(MediaType.TEXT_PLAIN)
+    public byte[] fetchImage(@PathParam("id") Integer id) {
+        System.out.println("ID is "+id);
+        Item item = find(id);
+        if(item.getImagesCollection().isEmpty()){
+            System.out.println("NULL "+"ID is "+id);
+            return null;
+        }
+        return item.getImagesCollection().iterator().next().getImage();
+    }
+    
     @Override
     protected EntityManager getEntityManager() {
         return em;
