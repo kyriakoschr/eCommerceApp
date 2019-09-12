@@ -130,7 +130,7 @@ public class MessagesFacadeREST extends AbstractFacade<Messages> {
     @GET
     @Path("count/{to}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String countREST(@HeaderParam("Authorization") String token,@PathParam("to") String to) throws Exception {
+    public Long countREST(@HeaderParam("Authorization") String token,@PathParam("to") String to) throws Exception {
         AuthenticationFilter.filter(token);
         long msgs = (long) em.createNamedQuery("Messages.findBySeenTo")
         .setParameter("seen",false)
@@ -138,7 +138,7 @@ public class MessagesFacadeREST extends AbstractFacade<Messages> {
                                 .setParameter("username", to)
                                 .getSingleResult()   )
         .getSingleResult();
-        return String.valueOf(msgs);
+        return msgs;
     }
 
     @Override
