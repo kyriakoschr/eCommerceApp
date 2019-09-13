@@ -9,8 +9,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.Basic;
@@ -99,7 +101,7 @@ public class Item implements Serializable {
     @JsonbTransient
     private Set<Images> imagesCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "item")
-    @JsonbTransient
+//    @JsonbTransient
     private Collection<Bids> bidsCollection;
 
     public Item() {
@@ -226,10 +228,12 @@ public class Item implements Serializable {
         this.imagesCollection = imagesCollection;
     }
 
-    @XmlTransient
-    @JsonbTransient
-    @JsonIgnore
+//    @XmlTransient
+//    @JsonbTransient
+//    @JsonIgnore
     public Collection<Bids> getBidsCollection() {
+        Collections.sort((List<Bids>) bidsCollection);
+        Collections.reverse((List<Bids>) bidsCollection);
         return bidsCollection;
     }
 

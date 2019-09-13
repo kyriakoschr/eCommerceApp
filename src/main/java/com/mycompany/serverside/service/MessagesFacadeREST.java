@@ -44,7 +44,9 @@ public class MessagesFacadeREST extends AbstractFacade<Messages> {
     @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void create(Messages entity,@HeaderParam("Authorization") String token) throws Exception {
+        System.out.println("ERRERERE");
         AuthenticationFilter.filter(token);
+        
         User to=entity.getToUserID();
         User from=entity.getFromUserID();
         entity.setSeen(false);
@@ -59,6 +61,7 @@ public class MessagesFacadeREST extends AbstractFacade<Messages> {
                 .setParameter("bidder", from)
                 .setParameter("seller", to)
                 .getSingleResult();
+        System.out.println(res);
         if(res>0)
             super.create(entity);
     }

@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Bids.findByBidderID", query = "SELECT b FROM Bids b WHERE b.bidsPK.bidderID = :bidderID"),
     @NamedQuery(name = "Bids.findByDateTime", query = "SELECT b FROM Bids b WHERE b.bidsPK.dateTime = :dateTime"),
     @NamedQuery(name = "Bids.findByAmount", query = "SELECT b FROM Bids b WHERE b.amount = :amount")})
-public class Bids implements Serializable {
+public class Bids implements Serializable,Comparable< Bids >{
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
@@ -111,6 +111,14 @@ public class Bids implements Serializable {
         return true;
     }
 
+    @Override
+    public int compareTo(Bids u) {
+        if (getAmount() == null || u.getAmount() == null) {
+          return 0;
+        }
+        return getAmount().compareTo(u.getAmount());
+      }
+    
     @Override
     public String toString() {
         return "com.mycompany.serverside.Bids[ bidsPK=" + bidsPK + " ]";

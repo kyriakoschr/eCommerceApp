@@ -104,6 +104,7 @@ public class ItemFacadeREST extends AbstractFacade<Item> {
     @Path("{id}")
     public void remove(@HeaderParam("Authorization") String token,@PathParam("id") Integer id) throws Exception {
         AuthenticationFilter.filter(token);
+        System.out.println("DELEET");
         int res=(int) em.createNamedQuery("Item.findByNumofbids").setParameter("id",id).getSingleResult();
         if(res==0)
             super.remove(super.find(id));
@@ -111,7 +112,7 @@ public class ItemFacadeREST extends AbstractFacade<Item> {
 
     @GET
     @Path("{id}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public Item find(@PathParam("id") Integer    id) {
         return super.find(id);
     }
