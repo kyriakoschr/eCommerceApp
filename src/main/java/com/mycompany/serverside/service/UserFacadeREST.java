@@ -119,7 +119,13 @@ public class UserFacadeREST extends AbstractFacade<User> {
     public String countREST() {
         return String.valueOf(super.count());
     }
-
+    
+    @GET
+    @Path("check/{uname}")
+    public Boolean checkUname(@PathParam("uname") String uname){
+        return super.find(uname)==null;
+    }
+    
     @Override
     protected EntityManager getEntityManager() {
         return em;

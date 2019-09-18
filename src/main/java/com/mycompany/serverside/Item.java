@@ -91,7 +91,7 @@ public class Item implements Serializable {
     @Size(max = 256)
     @Column(name = "Description")
     private String description;
-    @ManyToMany(mappedBy = "itemCollection",cascade = {CascadeType.PERSIST, CascadeType.MERGE,CascadeType.REFRESH})
+    @ManyToMany(mappedBy = "itemCollection")
 //    @JsonIgnore
     private Set<Category> categoryCollection = new HashSet<Category>();
     @JoinColumn(name = "Seller_ID", referencedColumnName = "Username")
@@ -195,7 +195,7 @@ public class Item implements Serializable {
         this.description = description;
     }
 
-    @XmlTransient
+//    @XmlTransient
     public Set<Category> getCategoryCollection() {
         return categoryCollection;
     }
@@ -212,9 +212,10 @@ public class Item implements Serializable {
         this.sellerID = sellerID;
     }
 
-    public void addBid(float bid){
+    public void addBid(Bids bid){
         numofbids++;
-        currentPrice=bid;
+        currentPrice=bid.getAmount();
+        getBidsCollection().add(bid);
     }
     
 //    @XmlTransient

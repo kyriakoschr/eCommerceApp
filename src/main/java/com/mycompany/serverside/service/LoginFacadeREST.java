@@ -57,6 +57,7 @@ public class LoginFacadeREST {
             Date now = new Date(nowMillis);
             long expMillis = nowMillis + 3000000L;
             Date exp = new Date(expMillis);
+            System.out.println(exp);
             String jws = Jwts.builder()
                         .setSubject(username)
                         .setIssuedAt(now)

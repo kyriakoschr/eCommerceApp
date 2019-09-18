@@ -9,6 +9,8 @@ import com.mycompany.serverside.Category;
 import com.mycompany.serverside.Item;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import static java.util.stream.Collectors.toList;
 import javax.ejb.Stateless;
@@ -99,6 +101,17 @@ public class CategoryFacadeREST extends AbstractFacade<Category> {
         Category cat = find(category);
         List<Item> res = new ArrayList<Item>();
         res.addAll(cat.getItemCollection());
+        if(res.isEmpty())
+            return res;
+        for (Iterator<Item> it = res.iterator(); it.hasNext();) {
+            Item i = it.next();
+            if(i.getEndDate()==null||i.getEndDate().before(new Date())){
+                it.remove();
+            }
+            else if(i.getStartDate()==null||i.getStartDate().after(new Date())){
+                it.remove();
+            }
+        }
         return res;
     }
 
