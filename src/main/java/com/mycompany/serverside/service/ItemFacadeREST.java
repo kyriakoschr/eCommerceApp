@@ -10,8 +10,11 @@ import com.mycompany.serverside.Images;
 import com.mycompany.serverside.Item;
 import com.mycompany.serverside.User;
 import com.mycompany.serverside.filters.AuthenticationFilter;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -58,6 +61,7 @@ public class ItemFacadeREST extends AbstractFacade<Item> {
                 Category temp = (Category)em.createNamedQuery("Category.findByName").setParameter("name", cat.getName()).getSingleResult();
                 System.out.println("FOUND existing !!!!!!!!!!!!!!!!!!!!");
                 cat.addItem(entity);
+                entity.addCategory(cat);
                 em.merge(entity);
                 em.merge(cat);
                 em.flush();
@@ -72,6 +76,7 @@ public class ItemFacadeREST extends AbstractFacade<Item> {
             catch(NoResultException e){
                 System.out.println("FOUND NEW!!!!!!!!!!!!!!!!!!!!");
                 cat.addItem(entity);
+                entity.addCategory(cat);
                 em.merge(cat);  
                 em.merge(entity);
             }
@@ -128,7 +133,18 @@ public class ItemFacadeREST extends AbstractFacade<Item> {
             System.out.println("EMPTY");
             return null;
         }
-        return query.getResultList();
+        List<Item> res = new ArrayList<Item>();
+        res.addAll(query.getResultList());
+        for (Iterator it = res.iterator(); it.hasNext();) {
+            Item i = (Item) it.next();
+            if(i.getEndDate()==null||i.getEndDate().before(new Date())){
+                it.remove();
+            }
+            else if(i.getStartDate()==null||i.getStartDate().after(new Date())){
+                it.remove();
+            }
+        }
+        return res;
     }
     
     @GET
@@ -147,7 +163,13 @@ public class ItemFacadeREST extends AbstractFacade<Item> {
     public List<Item> findbySeller(@HeaderParam("Authorization") String token,@PathParam("seller") String sellerID ) throws Exception {
 //        AuthenticationFilter.filter(token);
         User seller=(User) em.createNamedQuery("User.findByUsername").setParameter("username",sellerID).getSingleResult();
-        return em.createNamedQuery("Item.findBySeller").setParameter("sellerID",seller).getResultList();
+        List<Item> items=em.createNamedQuery("Item.findBySeller").setParameter("sellerID",seller).getResultList();
+        for (Iterator<Item> it = items.iterator(); it.hasNext();) {
+            Item i = it.next();
+            if(i.getEndDate()!=null&&i.getEndDate().before(new Date()))
+                it.remove();
+        }
+        return items;
     }
     
     @GET

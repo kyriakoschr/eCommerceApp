@@ -74,12 +74,13 @@ public class BidsFacadeREST extends AbstractFacade<Bids> {
         BidsPK pk = entity.getBidsPK();
         pk.setDateTime(new Date());
         entity.setBidsPK(pk);
-        if(entity.getAmount()>item.getCurrentPrice()) {
+        if(item.getCurrentPrice()==null||entity.getAmount()>item.getCurrentPrice()) {
             if(entity.getBidsPK().getDateTime().compareTo(item.getEndDate())<0) {
                 if(!item.getSellerID().equals(entity.getUser())){
-                    item.addBid(entity.getAmount());
+                    item.addBid(entity);
                     em.merge(item);
-                    super.create(entity);
+                    em.flush();
+//                    super.create(entity);
                 }
             }
         }
