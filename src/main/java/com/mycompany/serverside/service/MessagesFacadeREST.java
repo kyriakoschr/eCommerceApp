@@ -73,12 +73,14 @@ public class MessagesFacadeREST extends AbstractFacade<Messages> {
 
     @PUT
     @Path("{id}")
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void edit(@HeaderParam("Authorization") String token,@PathParam("id") Integer id, Messages entity) throws Exception {
+    public void edit(@HeaderParam("Authorization") String token,@PathParam("id") Integer id) throws Exception {
         AuthenticationFilter.filter(token);
-        super.edit(entity);
+        Messages entity = find(token, id);
+        entity.setSeen(Boolean.TRUE);
+        em.merge(entity);
+        em.flush();
     }
-
+    
     @DELETE
     @Path("{id}")
     public void remove(@HeaderParam("Authorization") String token,@PathParam("id") Integer id) throws Exception {
