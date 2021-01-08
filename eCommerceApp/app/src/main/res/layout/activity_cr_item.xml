@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout2"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center"
+        android:background="#4CAF50"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/header_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="0dp"
+            android:text="Create an Auction"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="#FFFFFF"
+            android:textSize="25sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center"
+        android:background="#4CAF50"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/regbtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="888dp"
+            android:ems="10"
+            android:text="Register" />
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent" />-->
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/footer"
+        android:layout_below="@+id/header"
+        android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:orientation="vertical">
+
+
+            <EditText
+                android:id="@+id/RegistrationName"
+                android:layout_width="400dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginBottom="8dp"
+                android:ems="10"
+                android:hint="Name of Item"
+                android:inputType="none"
+                ads:layout_constraintBottom_toTopOf="@+id/InitPrice"
+                ads:layout_constraintStart_toStartOf="parent" />
+
+            <EditText
+                android:id="@+id/InitPrice"
+                android:layout_width="400dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:ems="10"
+                android:hint="Initial Price"
+                android:inputType="numberDecimal"
+                ads:layout_constraintBottom_toTopOf="@+id/description"
+                ads:layout_constraintEnd_toEndOf="parent"
+                ads:layout_constraintStart_toStartOf="parent" />
+
+            <EditText
+                android:id="@+id/description"
+                android:layout_width="400dp"
+                android:layout_height="100dp"
+                android:ems="10"
+                android:hint="Description"
+                android:inputType="none"
+                tools:layout_editor_absoluteX="4dp"
+                tools:layout_editor_absoluteY="120dp" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="400dp"
+                android:layout_height="50dp"
+                android:text="TextView"
+                tools:layout_editor_absoluteY="220dp" />
+
+            <!--<Button-->
+            <!--android:id="@+id/regbtn"-->
+            <!--android:layout_width="400dp"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:layout_marginStart="4dp"-->
+            <!--android:layout_marginTop="888dp"-->
+            <!--android:ems="10"-->
+            <!--android:text="Register"-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--app:layout_constraintTop_toTopOf="parent" />-->
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</RelativeLayout>
